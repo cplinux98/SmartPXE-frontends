@@ -31,7 +31,8 @@
         </el-table-column>
         <el-table-column prop="status_progress" label="进度">
           <template slot-scope="scope">
-            <el-progress :text-inside="true" :stroke-width="26" :percentage="parseInt(scope.row.status_progress)"></el-progress>
+            <el-progress :text-inside="true" :stroke-width="26"
+              :percentage="parseInt(scope.row.status_progress)"></el-progress>
           </template>
         </el-table-column>
         <el-table-column fixed="right" label="操作" width="200px">
@@ -41,14 +42,9 @@
           </template>
         </el-table-column>
       </el-table>
-      <el-pagination
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :current-page="pagination.page"
-        :page-size="pagination.size"
-        layout="total, prev, pager, next, jumper"
-        :total="pagination.total"
-      >
+      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
+        :current-page="pagination.page" :page-size="pagination.size" layout="total, prev, pager, next, jumper"
+        :total="pagination.total">
       </el-pagination>
       <div style="margin-top: 20px">
         <el-button type="danger" size="small" disabled>终止并关机</el-button>
@@ -65,16 +61,8 @@
       </span>
     </el-dialog>
 
-    <el-drawer
-      :title="`${tempInfoObj.sn} 的详细信息`"
-      :before-close="handleClose"
-      :visible.sync="dialog"
-      direction="rtl"
-      size="70%"
-      custom-class="demo-drawer"
-      ref="drawer"
-      :border="true"
-    >
+    <el-drawer :title="`${tempInfoObj.sn} 的详细信息`" :before-close="handleClose" :visible.sync="dialog" direction="rtl"
+      size="70%" custom-class="demo-drawer" ref="drawer" :border="true">
       <div class="demo-drawer__content">
         <el-descriptions class="margin-top" title="安装详情" :column="1" border size="small">
           <el-descriptions-item label="当前状态">
@@ -94,7 +82,9 @@
             </el-steps>
           </el-descriptions-item>
           <el-descriptions-item label="实时日志">
-            <div><h2>如果任务日志长时间未更新，请检查是否已经安装完成。</h2></div>
+            <div>
+              <h2>如果任务日志长时间未更新，请检查是否已经安装完成。</h2>
+            </div>
             <el-input type="textarea" :disabled="true" v-model="tempInfoObj.status_content" :rows="20"> </el-input>
           </el-descriptions-item>
           <!-- <el-descriptions-item label="VNC画面">
@@ -167,14 +157,15 @@ export default {
       }
       this.hostList = response.results
       this.pagination = response.pagination
-      console.log('======')
+      // console.log(this.hostList)
+      // console.log('======')
     },
     handleSizeChange(val) {
-      console.log(`每页 ${val}`)
+      // console.log(`每页 ${val}`)
     },
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`)
-      this.getList(val)
+      // console.log(`当前页: ${val}`)
+      this.getHostList(val)
     },
     handleDel(row) {
       this.delDialogVisible = true
@@ -217,8 +208,8 @@ export default {
       this.cycleRunFunc(0, this.handleGetOne)
       this.dialog = false
     },
-    handleInstall() {},
-    handlePxeboot() {},
+    handleInstall() { },
+    handlePxeboot() { },
     toggleSelection(rows) {
       if (rows) {
         rows.forEach((row) => {

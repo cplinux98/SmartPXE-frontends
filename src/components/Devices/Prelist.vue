@@ -9,11 +9,13 @@
     <el-card class="box-card">
       <el-row :gutter="20">
         <el-col :span="6">
-          <el-input placeholder="请输入内容" v-model="search"> <el-button slot="append" icon="el-icon-search"></el-button> </el-input>
+          <el-input placeholder="请输入内容" v-model="search"> <el-button slot="append" icon="el-icon-search"></el-button>
+          </el-input>
         </el-col>
         <el-col :span="2"><el-button type="success" @click="getHostList()">手动刷新</el-button></el-col>
       </el-row>
-      <el-table ref="multipleTable" row-key="mac" :data="hostList" border style="width: 100%" @select="handleSelectionChange">
+      <el-table ref="multipleTable" row-key="mac" :data="hostList" border style="width: 100%"
+        @select="handleSelectionChange">
         <el-table-column type="selection" :reserve-selection="true" width="45"> </el-table-column>
         <el-table-column type="index" label="ID"></el-table-column>
         <el-table-column prop="sn" label="SN" width="180"> </el-table-column>
@@ -36,14 +38,9 @@
           </template>
         </el-table-column>
       </el-table>
-      <el-pagination
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :current-page="pagination.page"
-        :page-size="pagination.size"
-        layout="total, prev, pager, next, jumper"
-        :total="pagination.total"
-      >
+      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
+        :current-page="pagination.page" :page-size="pagination.size" layout="total, prev, pager, next, jumper"
+        :total="pagination.total">
       </el-pagination>
       <div style="margin-top: 20px">
         <el-button type="primary" size="small" @click="handleInstall()">立即安装</el-button>
@@ -61,13 +58,10 @@
           {{ editHostForm.sn }}
         </el-form-item>
         <el-form-item label="系统模板">
-          <el-select v-model="editHostForm.config" placeholder="请选择系统配置模板" @change="handleConfigChange" style="width: 50%">
-            <el-option
-              v-for="item in configList"
-              :key="item.id"
-              :label="item.name"
-              :value="{ name: item.name, path: item.path, image: item.image }"
-            ></el-option>
+          <el-select v-model="editHostForm.config" placeholder="请选择系统配置模板" @change="handleConfigChange"
+            style="width: 50%">
+            <el-option v-for="item in configList" :key="item.id" :label="item.name"
+              :value="{ name: item.name, path: item.path, image: item.image }"></el-option>
           </el-select>
         </el-form-item>
       </el-form>
@@ -107,10 +101,10 @@ export default {
       this.$refs[formName].resetFields()
     },
     handleSizeChange(val) {
-      console.log(`每页 ${val}`)
+      // console.log(`每页 ${val}`)
     },
     handleCurrentChange(val) {
-      console.log(`当前页： ${val}`)
+      // console.log(`当前页： ${val}`)
       this.getHostList(val)
     },
     async getHostList(page) {
@@ -123,18 +117,18 @@ export default {
       }
       this.hostList = response.results
       this.pagination = response.pagination
-      console.log('======')
+      // console.log('======')
     },
     handleSelectionChange(val) {
       this.multipleSelection = val
-      console.log('当前被选择的', this.multipleSelection)
+      // console.log('当前被选择的', this.multipleSelection)
     },
     handleInstall() {
       this.selectArray = []
       this.multipleSelection.forEach((row) => {
         this.selectArray.push(row.mac)
       })
-      console.log('进入装机列表的', this.selectArray)
+      // console.log('进入装机列表的', this.selectArray)
       this.selectArray.forEach(async (mac) => {
         console.log('当前处理的mac地址', mac)
         const { data: response } = await this.$http.post(`/install/iprelist/${mac}/install/`)
@@ -147,7 +141,7 @@ export default {
       this.selectArray = []
     },
     handleEdit(row) {
-      console.log(row)
+      // console.log(row)
       this.editHostForm = row
       this.editDialogFormVisible = true
     },
@@ -159,9 +153,9 @@ export default {
       this.configList = response.results
       console.log(this.configList)
     },
-    handleConfigChange() {},
+    handleConfigChange() { },
     editHost() {
-      console.log(this.editHostForm)
+      // console.log(this.editHostForm)
       const name = 'editHost'
       this.$refs[name].validate(async (valid) => {
         if (valid) {
@@ -177,8 +171,8 @@ export default {
         }
       })
     },
-    handleDelete() {},
-    handlePxeboot() {},
+    handleDelete() { },
+    handlePxeboot() { },
     handleDel(row) {
       this.$msgbox
         .confirm('此操作将删除该设备, 是否继续?', '提示', {

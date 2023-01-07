@@ -35,19 +35,14 @@
             <span> {{ row.date | dateFmt }}</span>
           </template>
         </el-table-column>
-        <el-table-column
-          prop="status"
-          label="安装结果"
-          width="100"
-          :filters="[
-            { text: '成功', value: 1 },
-            { text: '失败', value: 0 }
-          ]"
-          :filter-method="filterTag"
-          filter-placement="bottom-end"
-        >
+        <el-table-column prop="status" label="安装结果" width="100" :filters="[
+          { text: '成功', value: 1 },
+          { text: '失败', value: 0 }
+        ]" :filter-method="filterTag" filter-placement="bottom-end">
           <template #default="{ row }">
-            <el-tag :type="row.status ? 'success' : 'danger'" disable-transitions>{{ row.status ? 'success' : 'failed' }}</el-tag>
+            <el-tag :type="row.status ? 'success' : 'danger'" disable-transitions>{{
+              row.status ? 'success' : 'failed'
+            }}</el-tag>
           </template>
         </el-table-column>
         <el-table-column fixed="right" label="操作" width="200px">
@@ -57,29 +52,16 @@
           </template>
         </el-table-column>
       </el-table>
-      <el-pagination
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :current-page="pagination.page"
-        :page-size="pagination.size"
-        layout="total, prev, pager, next, jumper"
-        :total="pagination.total"
-      >
+      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
+        :current-page="pagination.page" :page-size="pagination.size" layout="total, prev, pager, next, jumper"
+        :total="pagination.total">
       </el-pagination>
       <div style="margin-top: 20px">
         <el-button type="info" size="small" disabled>信息导出</el-button>
       </div>
     </el-card>
-    <el-drawer
-      :title="`${tempInfoObj.sn} 的详细信息`"
-      :before-close="handleClose"
-      :visible.sync="dialog"
-      direction="rtl"
-      size="70%"
-      custom-class="demo-drawer"
-      ref="drawer"
-      :border="true"
-    >
+    <el-drawer :title="`${tempInfoObj.sn} 的详细信息`" :before-close="handleClose" :visible.sync="dialog" direction="rtl"
+      size="70%" custom-class="demo-drawer" ref="drawer" :border="true">
       <div class="demo-drawer__content">
         <el-descriptions class="margin-top" title="安装详情" :column="1" border size="small">
           <el-descriptions-item label="当前状态">
@@ -151,7 +133,7 @@ export default {
       }
       this.tableData = response.results
       this.pagination = response.pagination
-      console.log('======')
+      // console.log('======')
     },
     filterTag(value, row) {
       return row.status === value
@@ -161,10 +143,10 @@ export default {
       return row[property] === value
     },
     handleSizeChange(val) {
-      console.log(`每页 ${val}`)
+      // console.log(`每页 ${val}`)
     },
     handleCurrentChange(val) {
-      console.log(`当前页： ${val}`)
+      // console.log(`当前页： ${val}`)
       this.getList(val)
     },
     handleClose() {
@@ -176,8 +158,8 @@ export default {
       this.dialog = true
       console.log(this.tempMac)
     },
-    handleInstall() {},
-    handlePxeboot() {},
+    handleInstall() { },
+    handlePxeboot() { },
     handleDel(id) {
       this.$msgbox
         .confirm('此操作将删除该记录, 是否继续?', '提示', {

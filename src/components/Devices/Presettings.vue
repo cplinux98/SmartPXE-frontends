@@ -17,12 +17,8 @@
         <el-form-item label="系统模板">
           <!-- <el-input v-model="form.sn" placeholder="请输入设备的SN" style="width: 50%"></el-input> -->
           <el-select v-model="form.config" placeholder="请选择系统配置模板" @change="handleConfigChange" style="width: 50%">
-            <el-option
-              v-for="item in configList"
-              :key="item.id"
-              :label="item.name"
-              :value="{ name: item.name, path: item.path, image: item.image }"
-            ></el-option>
+            <el-option v-for="item in configList" :key="item.id" :label="item.name"
+              :value="{ name: item.name, path: item.path, image: item.image }"></el-option>
           </el-select>
         </el-form-item>
         <!-- <el-form-item label="主机名">
@@ -90,7 +86,7 @@ export default {
       this.macList = response
       console.log(this.macList, 'maclist')
     },
-    handleSNChange() {},
+    handleSNChange() { },
     async getConfigList() {
       const { data: response } = await this.$http.get('temp/config/')
       if (response.code) {
@@ -99,7 +95,7 @@ export default {
       this.configList = response.results
       console.log(this.configList)
     },
-    handleConfigChange() {},
+    handleConfigChange() { },
     addPreSetting() {
       console.log(this.form)
       const name = 'form'
@@ -143,4 +139,5 @@ export default {
 </script>
 
 <style lang="less" scoped>
+
 </style>
