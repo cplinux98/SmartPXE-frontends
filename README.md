@@ -2,7 +2,7 @@
 ## 项目描述
 SmartPXE项目的前端，使用了vue + element-ui
 
-演示地址： http://demo.smartpxe.com
+演示地址： http://smartpxe_demo.linux98.com
 
 
 ## 启动命令
@@ -10,7 +10,7 @@ SmartPXE项目的前端，使用了vue + element-ui
 ```bash
 yarn
 
-vue ui -p 8001
+npm run serve
 
 ```
 
@@ -19,3 +19,13 @@ vue ui -p 8001
 - nodejs v16.13.1
 - vue vue2
 - element-ui v2
+
+## 图片展示
+
+![dashboard](docs/1.png)
+
+![discover](docs/2.png)
+
+![running](docs/3.png)
+
+![result](docs/4.png)

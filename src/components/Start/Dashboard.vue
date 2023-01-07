@@ -89,11 +89,14 @@
 
 <script>
 // import { json } from 'body-parser'
+// import { time } from 'console'
 import * as echarts from 'echarts'
 export default {
   mounted() {
-    this.getCpuInfo()
+    this.initEcharts()
+    this.getMonitorInfo()
     this.getStatusInfo()
+    this.getHistoryInfo()
   },
   data() {
     return {
@@ -103,15 +106,43 @@ export default {
         online: 0,
         running: 0
       },
-      // status: {},
       chartObj: {
         cpu: 0,
         mem: 0,
         disk: 0
-      }
+      },
+      historyObj: {
+        days: [],
+        success: [],
+        failed: []
+      },
+      echarts_cpu: '',
+      echarts_mem: '',
+      echarts_disk: '',
+      echarts_history: ''
     }
   },
   methods: {
+    initEcharts() {
+      this.echarts_cpu = echarts.init(document.getElementById('cpu'))
+      this.echarts_mem = echarts.init(document.getElementById('mem'))
+      this.echarts_disk = echarts.init(document.getElementById('disk'))
+      this.echarts_history = echarts.init(document.getElementById('statistical'))
+
+      this.echarts_cpu.showLoading()
+      this.echarts_mem.showLoading()
+      this.echarts_disk.showLoading()
+      this.echarts_history.showLoading()
+    },
+    // sleep(time) {
+    //   var timeStamp = new Date().getTime()
+    //   var endTime = timeStamp + time
+    //   while (true) {
+    //     if (new Date().getTime() > endTime) {
+    //       return
+    //     }
+    //   }
+    // },
     async getStatusInfo() {
       const { data: response } = await this.$http.get('dashboard/status/')
       if (response.code) {
@@ -120,7 +151,7 @@ export default {
       this.status = response
       console.log(response)
     },
-    async getCpuInfo() {
+    async getMonitorInfo() {
       const { data: response } = await this.$http.get('dashboard/sysinfo/')
       if (response.code) {
         return this.$message.error(response.code)
@@ -130,8 +161,11 @@ export default {
         const keyUpper = key.toUpperCase()
         const value = this.chartObj[key]
         const option = {
+          title: {
+            text: keyUpper + '使用率'
+          },
           tooltip: {
-            formatter: '{a} <br/>{b} : {c}%'
+            formatter: '已经使用: {c}%'
           },
           toolbox: {
             feature: {
@@ -141,25 +175,54 @@ export default {
           },
           series: [
             {
-              name: keyUpper + '使用率',
+              name: keyUpper + '图表',
               type: 'gauge',
               detail: { formatter: '{value}%' },
-              data: [{ value, name: keyUpper + '使用率' }]
+              data: [{ value }]
             }
           ]
         }
-        const chart = echarts.init(document.getElementById(key))
-        chart.setOption(
-          option
-          , true)
-        window.onresize = function () {
-          chart.resize()
+        switch (key) {
+          case 'cpu':
+            this.echarts_cpu.setOption(option, true)
+            this.echarts_cpu.hideLoading()
+            window.onresize = function () {
+              this.echarts_cpu.resize()
+            }
+            break
+          case 'mem':
+            this.echarts_mem.setOption(option, true)
+            this.echarts_mem.hideLoading()
+            window.onresize = function () {
+              this.echarts_mem.resize()
+            }
+            break
+          case 'disk':
+            this.echarts_disk.setOption(option, true)
+            this.echarts_disk.hideLoading()
+            window.onresize = function () {
+              this.echarts_disk.resize()
+            }
+            break
+          default:
+            break
         }
       }
+    },
+    async getHistoryInfo() {
+      const { data: response } = await this.$http.get('dashboard/history/')
+      if (response.code) {
+        return this.$message.error(response.code)
+      }
+      this.historyObj = response
+
+      const days = 'days'
+      const success = 'success'
+      const failed = 'failed'
       // 统计折线图
       const option = {
         title: {
-          text: '一个月内历史统计'
+          text: '前30天的安装统计'
         },
         tooltip: {
           trigger: 'axis'
@@ -181,7 +244,7 @@ export default {
         xAxis: {
           type: 'category',
           boundaryGap: false,
-          data: ['2022-01-01', '2022-01-02', '2022-01-03', '2022-01-04', '2022-01-05', '2022-01-06', '2022-01-07', '2022-01-08', '2022-01-09', '2022-01-10', '2022-01-11', '2022-01-12', '2022-01-13', '2022-01-14', '2022-01-15', '2022-01-16', '2022-01-17', '2022-01-18', '2022-01-19', '2022-01-20', '2022-01-21', '2022-01-22', '2022-01-23', '2022-01-24', '2022-01-25', '2022-01-26', '2022-01-27', '2022-01-28', '2022-01-29', '2022-01-30']
+          data: this.historyObj[days]
         },
         yAxis: {
           type: 'value'
@@ -191,22 +254,23 @@ export default {
             name: '安装成功',
             type: 'line',
             stack: 'Total',
-            data: [77, 69, 5, 16, 31, 46, 71, 29, 23, 52, 63, 47, 73, 43, 18, 44, 73, 30, 13, 1, 39, 15, 89, 27, 21, 73, 27, 94, 48, 56]
+            data: this.historyObj[success]
           },
           {
             name: '安装失败',
             type: 'line',
             stack: 'Total',
-            data: [79, 59, 40, 54, 4, 30, 13, 97, 84, 70, 18, 71, 95, 24, 32, 35, 30, 40, 26, 35, 93, 87, 35, 46, 51, 48, 69, 46, 60, 33]
+            data: this.historyObj[failed]
           }
         ]
       }
-      const chart2 = echarts.init(document.getElementById('statistical'))
-      chart2.setOption(
+      // const chart2 = echarts.init(document.getElementById('statistical'))
+      this.echarts_history.setOption(
         option, true
       )
+      this.echarts_history.hideLoading()
       window.onresize = function () {
-        chart2.resize()
+        this.echarts_history.resize()
       }
     }
   }
@@ -214,55 +278,6 @@ export default {
 </script>
 
 <style lang="less" scoped>
-// #cpu {
-//   width: 80%;
-//   height: 80%;
-//   min-height: 500px;
-// }
-
-// #mem {
-//   width: 100%;
-//   height: 100%;
-//   min-height: 500px;
-// }
-
-// #disk {
-//   width: 100%;
-//   height: 100%;
-//   min-height: 500px;
-// }
-
-// .time {
-//   font-size: 13px;
-//   color: #999;
-// }
-
-// .bottom {
-//   margin-top: 13px;
-//   line-height: 12px;
-// }
-
-// .button {
-//   padding: 0;
-//   float: right;
-// }
-
-// .image {
-//   width: 100%;
-//   height: 50%;
-//   display: block;
-// }
-
-// .clearfix:before,
-// .clearfix:after {
-//   display: table;
-//   content: '';
-// }
-
-// .clearfix:after {
-//   clear: both;
-// }
-
 .flex {
   display: flex;
 }
