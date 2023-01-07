@@ -13,3 +13,9 @@ yarn
 vue ui -p 8001
 
 ```
+
+## 关键信息
+
+- nodejs v16.13.1
+- vue vue2
+- element-ui v2
