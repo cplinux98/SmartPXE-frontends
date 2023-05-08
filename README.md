@@ -2,8 +2,6 @@
 ## 项目描述
 SmartPXE项目的前端，使用了vue + element-ui
 
-演示地址： http://smartpxe_demo.linux98.com
-
 
 ## 启动命令
 
